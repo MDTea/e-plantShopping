@@ -3,12 +3,14 @@ import './ProductList.css'
 import CartItem from './CartItem';
 import { addItem } from './CartSlice';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 function ProductList({ onHomeClick }) {
     // ------------------ USE STATE ---------------
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
     const [addedToCart, setAddedToCart] = useState({}); // where inside there would be the items of the cart
     const dispatch = useDispatch();
+    const cartItems = useSelector(state => state.cart.items); // Get cart items globally (slice stores items)
     
     // implement fxnality to add a plant to card when user selects to Add To Cart Button
     // parameter contains info of selected plant
@@ -308,12 +310,18 @@ function ProductList({ onHomeClick }) {
                                 {/* Display other plant details like description and cost */}
                                 <div className="product-description">{plant.description}</div> {/* Display plant description */}
                                 <div className="product-cost">{plant.cost}</div> {/* Display plant cost */}
-                                <button
-                                    className="product-button"
-                                    onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
-                                >
-                                    Add to Cart
-                                </button>
+                                {(() => {
+                                    const isAdded = !!addedToCart[plant.name] || cartItems.some(item => item.name === plant.name);
+                                    return (
+                                        <button
+                                            className={`product-button ${isAdded ? 'disabled' : ''}`}
+                                            onClick={() => handleAddToCart(plant)}
+                                            disabled={isAdded}
+                                        >
+                                            {isAdded ? 'Added' : 'Add to Cart'}
+                                        </button>
+                                    );
+                                })()}
                                 </div>
                             ))}
                             </div>
