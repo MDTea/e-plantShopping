@@ -11,9 +11,12 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalAmount = () => {
     let totalAmount = 0;
     cart.forEach((item) => {
-        totalAmount += parseFloat(item.cost.substring(1)) * item.quantity;
+      const price = parseFloat(item.cost?.substring(1)) || 0;
+      const qty = item.quantity ?? 0;
+      totalAmount += price * qty;
     });
-    return totalAmount;
+    // return a number formatted to 2 decimals as a string
+    return totalAmount.toFixed(2);
   };
 
   const handleContinueShopping = (e) => {
@@ -25,28 +28,33 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
   const handleIncrement = (item) => {
-    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+    dispatch(updateQuantity({ name: item.name, quantity: (item.quantity ?? 0) + 1 }));
   };
 
   const handleDecrement = (item) => {
-    if(item > 1){
-        dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
-    }
-    else{
-        dispatch(removeItem({ name: item.name }));
+    // Decrement based on the item's quantity value
+    const qty = item.quantity ?? 0;
+    if (qty > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: qty - 1 }));
+    } else {
+      // removeItem in the slice expects the payload to be the item name (string)
+      dispatch(removeItem(item.name));
     }
   };
 
   const handleRemove = (item) => {
-    if(item){
-        removeItem(item);
+    if (item) {
+      // dispatch the action with the item name as payload
+      dispatch(removeItem(item.name));
     }
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    let totalCost = parseFloat(item.cost.substring(1)) * item.quantity;
-    return totalCost;
+    const price = parseFloat(item.cost?.substring(1)) || 0;
+    const qty = item.quantity ?? 0;
+    const totalCost = price * qty;
+    return totalCost.toFixed(2);
   };
 
   return (
