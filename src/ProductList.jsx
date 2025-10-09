@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
 import { addItem } from './CartSlice';
+import { useDispatch } from 'react-redux';
 function ProductList({ onHomeClick }) {
     // ------------------ USE STATE ---------------
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
     const [addedToCart, setAddedToCart] = useState({}); // where inside there would be the items of the cart
-   
+    const dispatch = useDispatch();
+    
     // implement fxnality to add a plant to card when user selects to Add To Cart Button
     // parameter contains info of selected plant
     const handleAddToCart = (product) => {
