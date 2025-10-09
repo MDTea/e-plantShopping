@@ -9,7 +9,7 @@ function ProductList({ onHomeClick }) {
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
     const [addedToCart, setAddedToCart] = useState({}); // where inside there would be the items of the cart
     const dispatch = useDispatch();
-    
+
     // implement fxnality to add a plant to card when user selects to Add To Cart Button
     // parameter contains info of selected plant
     const handleAddToCart = (product) => {
@@ -20,6 +20,11 @@ function ProductList({ onHomeClick }) {
           [product.name]: true, // Set the current product's name as a key with value 'true' to mark it as added
         }));
       };
+    
+    // let the user know how many items are in their cart
+    const calculateTotalQuantity = () => {
+        return CartItem ? CartItem.reduce((total, item) => total + item.quantity, 0) : 0;
+    };
 
     const plantsArray = [
         {
